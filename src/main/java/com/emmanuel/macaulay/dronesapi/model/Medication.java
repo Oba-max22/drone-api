@@ -1,17 +1,27 @@
 package com.emmanuel.macaulay.dronesapi.model;
 
 import jakarta.persistence.Entity;
-import lombok.*;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Entity
-public class Medication extends BaseEntity {
+public class Medication implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Pattern(regexp="^[A-Za-z0-9_-]*$", message="only letters, numbers, underscore and '-' are allowed")
     private String name;
