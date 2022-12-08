@@ -5,14 +5,18 @@ import com.emmanuel.macaulay.dronesapi.enums.State;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import lombok.*;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @AllArgsConstructor
@@ -20,11 +24,13 @@ import java.math.BigDecimal;
 @Builder
 @Getter
 @Entity
-public class Drone extends BaseEntity {
+public class Drone implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Size(max=500)
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private Long serialNumber;
+    @Size(max=100)
+    private String serialNumber;
 
     @Enumerated(EnumType.ORDINAL)
     private Model model;
