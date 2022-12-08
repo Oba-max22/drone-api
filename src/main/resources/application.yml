@@ -2,12 +2,11 @@ spring:
   h2:
     console.enabled: true
   datasource:
-    url: jdbc:h2:file:~/src/main/resources/drones-api-db
+    url: jdbc:h2:file:~/src/main/resources/drones-db
     driverClassName: org.h2.Driver
     username: root
     password:
   jpa:
-#    defer-datasource-initialization: true
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
@@ -15,7 +14,8 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-#  sql:
-#    init:
-#      mode: always
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
 
