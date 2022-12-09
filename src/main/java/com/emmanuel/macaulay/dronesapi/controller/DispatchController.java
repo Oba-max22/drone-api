@@ -39,6 +39,12 @@ public class DispatchController {
         ApiResponse<List<Medication>> apiResponse = new ApiResponse<>("Loaded medication", droneService.getLoadedMedication(serialNumber));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
-    // TODO checking available drones for loading;
+
+    @GetMapping(value="/available")
+    public ResponseEntity<?> getAvailableDrones(){
+        ApiResponse<List<Drone>> apiResponse = new ApiResponse<>("Available drones", droneService.getAvailableDrones());
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
     // TODO check drone battery level for a given drone;
 }
