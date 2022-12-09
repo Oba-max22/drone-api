@@ -67,6 +67,14 @@ public class DroneServiceImplementation implements DroneService {
         return getDrone(serialNumber).getMedicationList();
     }
 
+    @Override
+    public List<Drone> getAvailableDrones() {
+        List<State> stateList = new java.util.ArrayList<>();
+        stateList.add(State.IDLE);
+        stateList.add(State.LOADING);
+        return droneRepository.findDronesByStateIn(stateList);
+    }
+
     public boolean hasReachedWeightLimit(Drone drone) {
         if (drone.getMedicationList().size() == 0) {
             return false;
