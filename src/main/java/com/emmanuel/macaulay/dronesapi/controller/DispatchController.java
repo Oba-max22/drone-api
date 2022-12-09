@@ -4,6 +4,7 @@ import com.emmanuel.macaulay.dronesapi.model.Drone;
 import com.emmanuel.macaulay.dronesapi.model.Medication;
 import com.emmanuel.macaulay.dronesapi.payload.request.RegisterRequest;
 import com.emmanuel.macaulay.dronesapi.payload.response.ApiResponse;
+import com.emmanuel.macaulay.dronesapi.payload.response.DroneBatteryResponse;
 import com.emmanuel.macaulay.dronesapi.service.DroneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -46,5 +47,9 @@ public class DispatchController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    // TODO check drone battery level for a given drone;
+    @GetMapping(value="/{serialNumber}/battery")
+    public ResponseEntity<?> getBatteryLevel(@PathVariable(value = "serialNumber") String serialNumber){
+        ApiResponse<DroneBatteryResponse> apiResponse = new ApiResponse<>("Battery level", droneService.getBatteryLevel(serialNumber));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 }

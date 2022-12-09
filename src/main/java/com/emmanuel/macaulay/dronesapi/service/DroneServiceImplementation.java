@@ -8,14 +8,18 @@ import com.emmanuel.macaulay.dronesapi.exception.UnavailableForLoadingException;
 import com.emmanuel.macaulay.dronesapi.model.Drone;
 import com.emmanuel.macaulay.dronesapi.model.Medication;
 import com.emmanuel.macaulay.dronesapi.payload.request.RegisterRequest;
+import com.emmanuel.macaulay.dronesapi.payload.response.DroneBatteryResponse;
 import com.emmanuel.macaulay.dronesapi.repository.DroneRepository;
 import com.emmanuel.macaulay.dronesapi.repository.MedicationRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class DroneServiceImplementation implements DroneService {
@@ -73,6 +77,24 @@ public class DroneServiceImplementation implements DroneService {
         stateList.add(State.IDLE);
         stateList.add(State.LOADING);
         return droneRepository.findDronesByStateIn(stateList);
+    }
+
+    @Override
+    public DroneBatteryResponse getBatteryLevel(String serialNumber) {
+        Drone drone = getDrone(serialNumber);
+        return DroneBatteryResponse.builder()
+                .serialNumber(drone.getSerialNumber())
+                .batteryLevel(drone.getBatteryCapacity().doubleValue())
+                .build();
+    }
+
+    @Scheduled(fixedRate = 300000)
+    public void checkDronesBatteryLevels() {
+        log.info("Checking drones battery levels");
+        List<Drone> droneList = droneRepository.findAll();
+        droneList.forEach(drone -> {
+            log.info("Drone: {}, Battery Level: {}", drone.getSerialNumber(), drone.getBatteryCapacity().doubleValue());
+        });
     }
 
     public boolean hasReachedWeightLimit(Drone drone) {
