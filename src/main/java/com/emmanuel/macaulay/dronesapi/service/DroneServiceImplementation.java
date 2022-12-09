@@ -35,6 +35,47 @@ public class DroneServiceImplementation implements DroneService {
         return droneRepository.save(drone);
     }
 
+    @Override
+    public Drone loadDroneWithMedication(String serialNumber, String medicationCode) {
+        Medication medication = medicationRepository.findMedicationByCode(medicationCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Medication", "code", medicationCode));
+
+        Drone drone = getDrone(serialNumber);
+
+        if (drone.getBatteryCapacity().doubleValue() < 25.0) {
+            throw new LowBatteryException("Insufficient battery capacity");
+        }
+
+        if (drone.getState().equals(State.IDLE) || drone.getState().equals(State.LOADING)) {
+            if (!hasReachedWeightLimit(drone)) {
+                drone.setState(State.LOADING);
+                drone.getMedicationList().add(medication);
+            }
+
+            if (hasReachedWeightLimit(drone)) {
+                drone.setState(State.LOADED);
+            }
+        } else {
+            throw new UnavailableForLoadingException("Drone is unavailable for loading");
+        }
+        return droneRepository.save(drone);
+    }
+
+    public boolean hasReachedWeightLimit(Drone drone) {
+        if (drone.getMedicationList().size() == 0) {
+            return false;
+        }
+
+        return drone.getMedicationList().stream()
+                .map(Medication::getWeight)
+                .reduce(0, Integer::sum).equals(drone.getWeightLimit());
+    }
+
+    private Drone getDrone(String serialNumber) {
+        return droneRepository.findDroneBySerialNumber(serialNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Drone", "serialNumber", serialNumber));
+    }
+
     private State stateAdapter(String state) {
         try {
             return State.valueOf(state.toUpperCase());
