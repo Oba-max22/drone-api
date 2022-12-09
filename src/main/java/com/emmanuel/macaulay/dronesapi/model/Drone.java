@@ -2,29 +2,23 @@ package com.emmanuel.macaulay.dronesapi.model;
 
 import com.emmanuel.macaulay.dronesapi.enums.Model;
 import com.emmanuel.macaulay.dronesapi.enums.State;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import jakarta.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Getter
+@Data
 @Entity
-public class Drone implements Serializable {
+public class Drone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,4 +37,8 @@ public class Drone implements Serializable {
 
     @Enumerated(EnumType.ORDINAL)
     private State state;
+
+    @OneToMany( fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private List<Medication> medicationList;
 }

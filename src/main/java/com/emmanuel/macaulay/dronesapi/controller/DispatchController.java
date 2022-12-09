@@ -24,8 +24,14 @@ public class DispatchController {
         return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
     }
 
-    // TODO: loading a drone with medication items;
-    // TODO: checking loaded medication items for a given drone;
-    // TODO: checking available drones for loading;
-    // TODO: check drone battery level for a given drone;
+    @PutMapping(value="/{serialNumber}/load/{medicationCode}")
+    public ResponseEntity<?> loadDrone(@PathVariable(value = "serialNumber") String serialNumber,
+                                       @PathVariable(value = "medicationCode") String medicationCode){
+        ApiResponse<Drone> apiResponse = new ApiResponse<>("Loading successful", droneService.loadDroneWithMedication(serialNumber, medicationCode));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    // TODO checking loaded medication items for a given drone;
+    // TODO checking available drones for loading;
+    // TODO check drone battery level for a given drone;
 }

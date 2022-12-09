@@ -7,4 +7,5 @@ public interface DroneService {
 
     Drone registerDrone(RegisterRequest registerRequest);
 
+    Drone loadDroneWithMedication(String serialNumber, String medicationCode);
 }
