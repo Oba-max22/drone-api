@@ -13,6 +13,7 @@ import com.emmanuel.macaulay.dronesapi.repository.MedicationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -59,6 +60,11 @@ public class DroneServiceImplementation implements DroneService {
             throw new UnavailableForLoadingException("Drone is unavailable for loading");
         }
         return droneRepository.save(drone);
+    }
+
+    @Override
+    public List<Medication> getLoadedMedication(String serialNumber) {
+        return getDrone(serialNumber).getMedicationList();
     }
 
     public boolean hasReachedWeightLimit(Drone drone) {
